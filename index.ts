@@ -4,12 +4,12 @@ const fs = require('fs');
 
 const replaceTemplate = require('./modules/replaceTemplate.ts');
 
-const data = fs.readFileSync(`${__dirname}/data.json`, 'utf-8');
+const data = fs.readFileSync(`${__dirname}/db/data.json`, 'utf-8');
 const parsedData = JSON.parse(data);
 
-const mainPage = fs.readFileSync(`${__dirname}/mainPage.html`, 'utf-8');
-const detailsPage = fs.readFileSync(`${__dirname}/detailsPage.html`, 'utf-8');
-const itemBlock = fs.readFileSync(`${__dirname}/itemBlock.html`, 'utf-8');
+const mainPage = fs.readFileSync(`${__dirname}/templates/mainPage.html`, 'utf-8');
+const detailsPage = fs.readFileSync(`${__dirname}/templates/detailsPage.html`, 'utf-8');
+const itemBlock = fs.readFileSync(`${__dirname}/templates/itemBlock.html`, 'utf-8');
 
 // server
 const server = http.createServer((request, response) => {
