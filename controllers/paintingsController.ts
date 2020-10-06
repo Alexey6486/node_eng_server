@@ -2,6 +2,25 @@ const fs = require('fs');
 
 let PAINTINGS_DB = JSON.parse(fs.readFileSync(`${__dirname}/../data/paintings.json`));
 
+exports.check = (request, response, next) => {
+    const details = PAINTINGS_DB.items.find(painting => painting.id === request.params.id);
+    if (!details) {
+        return response.status(404).json({
+            status: 'Error',
+            message: 'ID hasn\'t been found'
+        });
+    }
+    next();
+};
+exports.checkPayload = (request, response, next) => {
+    if (!request.body.name || !request.body.width || !request.body.height) {
+        return response.status(400).json({
+            status: 'Error',
+            message: 'Missing required fields'
+        });
+    }
+    next();
+}
 exports.getAllPaintings = (request, response) => {
     response
         .set({
@@ -19,13 +38,6 @@ exports.getAllPaintings = (request, response) => {
 };
 exports.getPaintingDetails = (request, response) => {
     const details = PAINTINGS_DB.items.find(painting => painting.id === request.params.id);
-
-    if (!details) {
-        return response.status(404).json({
-            status: 'Error',
-            message: 'ID hasn\'t been found'
-        })
-    }
 
     response
         .set({
@@ -67,13 +79,6 @@ exports.addNewPainting = (request, response) => {
 exports.updatePainting = (request, response) => {
     const details = PAINTINGS_DB.items.find(painting => painting.id === request.params.id);
 
-    if (!details) {
-        return response.status(404).json({
-            status: 'Error',
-            message: 'ID hasn\'t been found'
-        })
-    }
-
     response
         .set({
             "Access-Control-Allow-Origin": "*",
@@ -89,13 +94,6 @@ exports.updatePainting = (request, response) => {
 };
 exports.deletePainting = (request, response) => {
     const details = PAINTINGS_DB.items.find(painting => painting.id === request.params.id);
-
-    if (!details) {
-        return response.status(404).json({
-            status: 'Error',
-            message: 'ID hasn\'t been found'
-        })
-    }
 
     response
         .set({

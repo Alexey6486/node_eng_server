@@ -6,6 +6,7 @@
   "dependencies": {
     "@types/node": "^14.11.2",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "slugify": "^1.4.5",
@@ -17,7 +18,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsnd --respawn server.ts"
+    "start:dev": "tsnd --respawn server.ts",
+    "start:pro": "set NODE_ENV=production tsnd --respawn server.ts"
   },
   "repository": {
     "type": "git",
