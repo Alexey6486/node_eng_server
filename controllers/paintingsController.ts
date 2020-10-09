@@ -1,23 +1,29 @@
 const PaintingModelImport = require('../models/paintingsModel.ts');
 const headers = require('./headers/headers.ts');
+const ApiFeatures = require('../utils/apiFeatures.ts');
 
 exports.getAllPaintings = async (request, response) => {
     try {
-        const allPaintings = await PaintingModelImport.find();
+        const paintingsFeatures = new ApiFeatures(PaintingModelImport.find(), request.query)
+            .filter().sort().fields().pagination();
 
+        // execute query
+        const resultAllPaintingsQuery = await paintingsFeatures.query;
+
+        // send response
         response.set(headers.getHeaders).status(200)
             .json({
                 status: 'success',
-                total: allPaintings.length,
+                total: resultAllPaintingsQuery.length,
                 data: {
-                    paintings: allPaintings
+                    paintings: resultAllPaintingsQuery
                 },
             })
     } catch (error) {
         response.set(headers.getHeaders).status(400)
             .json({
                 status: 'error',
-                message: 'something went wrong while getting all paintings',
+                message: error,
             })
     }
 };

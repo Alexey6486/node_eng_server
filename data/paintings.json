@@ -1,28 +1,28 @@
 {
     "items": [
         {
-            "id": "1601967620598",
-            "name": "sunset",
-            "width": "50",
-            "height": "30"
+            "name": "twilight",
+            "style": "impressionism",
+            "genre": "landscape",
+            "material": "canvas",
+            "technic": "oil",
+            "description": "countryside",
+            "created": "09-10-2020",
+            "image": "url",
+            "width": "80",
+            "height": "60"
         },
         {
-            "id": "1601967630390",
-            "name": "sunrise",
-            "width": "65",
-            "height": "42"
-        },
-        {
-            "id": "1601967630500",
             "name": "dawn",
-            "width": "46",
-            "height": "81"
-        },
-        {
-            "id": "1601991018950",
-            "name": "sunset2",
+            "style": "actuality",
+            "genre": "sketch",
+            "material": "whatman",
+            "technic": "watercolor",
+            "description": "nature",
+            "created": "12-05-2020",
+            "image": "url",
             "width": "30",
-            "height": "30"
+            "height": "20"
         }
     ]
 }

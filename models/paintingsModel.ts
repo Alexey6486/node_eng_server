@@ -4,7 +4,8 @@ const paintingSchema = new mongoosePaintingModel.Schema({
     name: {
         type: String,
         required: [true, 'A painting must have a name'],
-        unique: true
+        unique: true,
+        trim: true
     },
     style: {
         type: String,
@@ -29,6 +30,7 @@ const paintingSchema = new mongoosePaintingModel.Schema({
     created: {
         type: String,
         required: [true],
+        trim: true
     },
     image: {
         type: String,
@@ -37,27 +39,20 @@ const paintingSchema = new mongoosePaintingModel.Schema({
     width: {
         type: String,
         required: [true, 'A painting must have a width'],
+        trim: true
     },
     height: {
         type: String,
         required: [true, 'A painting must have a height'],
+        trim: true
     },
+    added: {
+        type: Date,
+        default: Date.now()
+    }
 });
 
 const Painting = mongoosePaintingModel.model('Painting', paintingSchema);
-
-const testPainting = new Painting({
-    name: "",
-    style: "",
-    genre: "",
-    material: "",
-    technic: "",
-    description: "",
-    created: "",
-    image: "",
-    width: "",
-    height: "",
-});
 
 module.exports = Painting;
 

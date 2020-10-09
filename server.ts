@@ -1,8 +1,8 @@
 const dotenv = require('dotenv');
+dotenv.config({path: './config.env'});
+
 const appExpress = require('./app');
 const mongoose = require('mongoose');
-
-dotenv.config({path: './config.env'});
 
 mongoose.connect(process.env.DATABASE_LOCAL, {
     useNewUrlParser: true,
