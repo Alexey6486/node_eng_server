@@ -1,4 +1,6 @@
-exports.getAllUsers = (request, response) => {
+import {NextFunction, Request, Response} from "express";
+
+exports.getAllUsers = (request: Request, response: Response) => {
     response
         .status(200)
         .json({
@@ -8,7 +10,7 @@ exports.getAllUsers = (request, response) => {
             }
         })
 }
-exports.createUser = (request, response) => {
+exports.createUser = (request: Request, response: Response) => {
     response
         .status(201)
         .json({
@@ -18,7 +20,7 @@ exports.createUser = (request, response) => {
             }
         })
 }
-exports.getUser = (request, response) => {
+exports.getUser = (request: Request, response: Response) => {
     response
         .status(200)
         .json({
@@ -28,7 +30,7 @@ exports.getUser = (request, response) => {
             }
         })
 }
-exports.updateUser = (request, response) => {
+exports.updateUser = (request: Request, response: Response) => {
     response
         .status(200)
         .json({
@@ -38,7 +40,7 @@ exports.updateUser = (request, response) => {
             }
         })
 }
-exports.deleteUser = (request, response) => {
+exports.deleteUser = (request: Request, response: Response) => {
     response
         .status(204)
         .json({

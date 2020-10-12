@@ -3,7 +3,7 @@ class APIFeatures {
     query: any
     queryString: any
 
-    constructor(query, queryString) {
+    constructor(query: any, queryString: any) {
         this.query = query;
         this.queryString = queryString;
     }

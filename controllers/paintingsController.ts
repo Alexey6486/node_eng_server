@@ -1,106 +1,115 @@
+import {NextFunction, Request, Response} from "express";
+
 const PaintingModelImport = require('../models/paintingsModel.ts');
 const headers = require('./headers/headers.ts');
 const ApiFeatures = require('../utils/apiFeatures.ts');
+const catchAsync = require('../utils/catchAsync');
+const AppErrorInController = require('../utils/appError.ts');
 
-exports.getAllPaintings = async (request, response) => {
-    try {
-        const paintingsFeatures = new ApiFeatures(PaintingModelImport.find(), request.query)
-            .filter().sort().fields().pagination();
+exports.getAllPaintings = catchAsync(async (request: Request, response: Response) => {
 
-        // execute query
-        const resultAllPaintingsQuery = await paintingsFeatures.query;
+    const paintingsFeatures = new ApiFeatures(PaintingModelImport.find(), request.query)
+        .filter().sort().fields().pagination();
 
-        // send response
-        response.set(headers.getHeaders).status(200)
-            .json({
-                status: 'success',
-                total: resultAllPaintingsQuery.length,
-                data: {
-                    paintings: resultAllPaintingsQuery
-                },
-            })
-    } catch (error) {
-        response.set(headers.getHeaders).status(400)
-            .json({
-                status: 'error',
-                message: error,
-            })
+    // execute query
+    const resultAllPaintingsQuery = await paintingsFeatures.query;
+
+    // send response
+    response.set(headers.getHeaders).status(200)
+        .json({
+            status: 'success',
+            total: resultAllPaintingsQuery.length,
+            data: {
+                paintings: resultAllPaintingsQuery
+            },
+        })
+});
+exports.getPaintingDetails = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+
+    const details = await PaintingModelImport.findById(request.params.id);
+
+    if (!details) {
+        return next(new AppErrorInController(`No such painting`, 404));
     }
-};
-exports.getPaintingDetails = async (request, response) => {
-    try {
-        const details = await PaintingModelImport.findById(request.params.id);
 
-        response.set(headers.getHeaders).status(200)
-            .json({
-                status: 'success',
-                data: {
-                    painting: details
-                },
-            })
-    } catch (error) {
-        response.set(headers.getHeaders).status(400)
-            .json({
-                status: 'error',
-                message: 'something went wrong while getting painting\'s details',
-            })
-    }
-};
-exports.addNewPainting = async (request, response) => {
-    try {
-        const newPainting = await PaintingModelImport.create(request.body);
+    response.set(headers.getHeaders).status(200)
+        .json({
+            status: 'success',
+            data: {
+                painting: details
+            },
+        })
+});
+exports.addNewPainting = catchAsync(async (request: Request, response: Response) => {
 
-        response.set(headers.postHeaders).status(201)
-            .json({
-                status: 'success',
-                data: {
-                    painting: newPainting
-                }
-            });
-    } catch (error) {
-        response.set(headers.postHeaders).status(400)
-            .json({
-                status: "error",
-                message: "Invalid field(s)"
-            });
-    }
-};
-exports.updatePainting = async (request, response) => {
-    try {
-        const update = await PaintingModelImport.findByIdAndUpdate(request.params.id, request.body, {
-            new: true,
-            runValidators: true
+    const newPainting = await PaintingModelImport.create(request.body);
+
+    response.set(headers.postHeaders).status(201)
+        .json({
+            status: 'success',
+            data: {
+                painting: newPainting
+            }
         });
-        // new: true - returns updated document, so we can send it as a response to the client
-        response.set(headers.patchHeaders).status(200)
-            .json({
-                status: 'success',
-                data: {
-                    painting: update
-                },
-            })
-    } catch (error) {
-        response.set(headers.patchHeaders).status(400)
-            .json({
-                status: 'error',
-                message: 'something went wrong while updating painting\'s details',
-            })
-    }
-};
-exports.deletePainting = async (request, response) => {
-    try {
-        await PaintingModelImport.findByIdAndDelete(request.params.id);
+});
+exports.updatePainting = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
 
-        response.set(headers.deleteHeaders).status(204)
-            .json({
-                status: 'success',
-                data: null,
-            })
-    } catch (error) {
-        response.set(headers.deleteHeaders).status(400)
-            .json({
-                status: 'error',
-                message: 'something went wrong while deleting painting\'s details',
-            })
+    const update = await PaintingModelImport.findByIdAndUpdate(request.params.id, request.body, {
+        new: true,
+        runValidators: true
+    });
+    // new: true - returns updated document, so we can send it as a response to the client
+
+    if (!update) {
+        return next(new AppErrorInController(`No such painting`, 404));
     }
-};
+
+    response.set(headers.patchHeaders).status(200)
+        .json({
+            status: 'success',
+            data: {
+                painting: update
+            },
+        })
+});
+exports.deletePainting = catchAsync(async (request: Request, response: Response, next: NextFunction) => {
+
+    const deletePainting = await PaintingModelImport.findByIdAndDelete(request.params.id);
+
+    if (!deletePainting) {
+        return next(new AppErrorInController(`No such painting`, 404));
+    }
+
+    response.set(headers.deleteHeaders).status(204)
+        .json({
+            status: 'success',
+            data: null,
+        })
+});
+
+// exports.getPaintingsStats = async (request, response) => {
+//     try {
+//         const stat = await PaintingModelImport.aggregate([
+//             {
+//                 $match: { width: {$lte: 50}}
+//             },
+//             {
+//                 $group: {
+//                     _id: '$style', //null - everything
+//                     width: { $avg: '$width' },
+//                     height: { $avg: '$height' }
+//                 }
+//             }
+//         ]);
+//         response.set(headers.getHeaders).status(200)
+//             .json({
+//                 status: 'success',
+//                 data: stat,
+//             })
+//     } catch (error) {
+//         response.status(404).json({
+//             status: 'Error',
+//             message: error
+//         })
+//     }
+// }

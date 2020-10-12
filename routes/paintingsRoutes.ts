@@ -4,6 +4,9 @@ const paintingsControllers = require('../controllers/paintingsController');
 
 const routerPaintings = expressPaintingsRoutes.Router();
 
+// routerPaintings.route('/stat')
+//     .get(paintingsControllers.getPaintingsStats)
+
 routerPaintings.route('/')
     .get(paintingsControllers.getAllPaintings)
     .post(paintingsControllers.addNewPainting);

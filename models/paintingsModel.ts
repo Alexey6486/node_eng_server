@@ -1,11 +1,28 @@
 const mongoosePaintingModel = require('mongoose');
+import mongoose, { Schema, Document } from "mongoose";
 
-const paintingSchema = new mongoosePaintingModel.Schema({
+export interface PaintingInterface extends Document {
+    name: string;
+    style: string;
+    genre: string;
+    material: string;
+    technic: string;
+    description: string;
+    created: number;
+    image: string;
+    width: number;
+    height: number;
+    added: Date;
+}
+
+const paintingSchema: Schema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'A painting must have a name'],
         unique: true,
-        trim: true
+        trim: true,
+        maxlength: [200, 'A painting\'s name must have maximum 200 characters'],
+        minlength: [1, 'A painting\'s name must have minimum 1 character'],
     },
     style: {
         type: String,
@@ -28,23 +45,29 @@ const paintingSchema = new mongoosePaintingModel.Schema({
         required: [false],
     },
     created: {
-        type: String,
+        type: Number,
         required: [true],
-        trim: true
+        trim: true,
+        min: [1900, 'Length must be equal to 1900'],
+        max: [2100, 'Length must be equal to 2100']
     },
     image: {
         type: String,
         required: [true],
     },
     width: {
-        type: String,
+        type: Number,
         required: [true, 'A painting must have a width'],
-        trim: true
+        trim: true,
+        min: [1, 'Min width must be equal to 1'],
+        max: [1000, 'Max width must not be more than 1000']
     },
     height: {
-        type: String,
+        type: Number,
         required: [true, 'A painting must have a height'],
-        trim: true
+        trim: true,
+        min: [1, 'Min height must be equal to 1'],
+        max: [1000, 'Max height must not be more than 1000']
     },
     added: {
         type: Date,
@@ -52,7 +75,7 @@ const paintingSchema = new mongoosePaintingModel.Schema({
     }
 });
 
-const Painting = mongoosePaintingModel.model('Painting', paintingSchema);
+const Painting = mongoose.model<PaintingInterface>('Painting', paintingSchema);
 
 module.exports = Painting;
 
