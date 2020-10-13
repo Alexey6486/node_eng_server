@@ -1,4 +1,4 @@
-
+const protectController = require('../controllers/authController.ts');
 const expressPaintingsRoutes = require('express');
 const paintingsControllers = require('../controllers/paintingsController');
 
@@ -8,7 +8,7 @@ const routerPaintings = expressPaintingsRoutes.Router();
 //     .get(paintingsControllers.getPaintingsStats)
 
 routerPaintings.route('/')
-    .get(paintingsControllers.getAllPaintings)
+    .get(protectController.protect, paintingsControllers.getAllPaintings)
     .post(paintingsControllers.addNewPainting);
 
 routerPaintings.route('/:id')

@@ -18,6 +18,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
+// app.use((request: Request, response: Response, next: NextFunction) => {
+//     console.log(request.headers)
+//     next()
+// });
+
+
 // api handlers
 app.use('/api/v1/paintings', paintingsRouter);
 app.use('/api/v1/users', usersRouter);

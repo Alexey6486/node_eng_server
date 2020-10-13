@@ -11,10 +11,10 @@ const handleCastErrorDb = (error: any) => {
         return new AppErrorInEC(msg, 400);
     }
 };
-const handleValErrorDb = (error: any) => {
-    const msg = 'One of the fields (or many) didn\'t pass validation';
-    return new AppErrorInEC(msg, 400);
-};
+const handleValErrorDb = () => new AppErrorInEC('One of the fields (or many) didn\'t pass validation', 400);
+const handleJWTError = () => new AppErrorInEC('Invalid token. Please login again.', 400);
+const handleJWTExpired = () => new AppErrorInEC('Token expired. Please login again.', 400);
+
 const errorModDevelopment = (error: any, response: Response) => {
     response.status(error.statusCode).json({
         status: error.status,
@@ -58,7 +58,9 @@ module.exports = (error: any, request: Request, response: Response, next: NextFu
         // handle db check error if name is duplicated
         let errorNew = {...error}
         if (errorNew.name === 'MongoError') errorNew = handleCastErrorDb(errorNew);
-        if (error.name === 'ValidationError') errorNew = handleValErrorDb(errorNew);
+        if (error.name === 'ValidationError') errorNew = handleValErrorDb();
+        if (error.name === 'JsonWebTokenError') errorNew = handleJWTError();
+        if (error.name === 'TokenExpiredError') errorNew = handleJWTExpired();
         errorModProduction(errorNew, response);
     }
 }

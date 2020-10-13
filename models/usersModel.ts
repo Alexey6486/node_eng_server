@@ -10,6 +10,7 @@ export interface UserInterface extends Document {
     isVerified: boolean
     photo: string
     added: Date
+    passwordChangedAt: Date
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -51,6 +52,10 @@ const userSchema: Schema = new mongoose.Schema({
     added: {
         type: Date,
         default: Date.now()
+    },
+    passwordChangedAt: {
+        type: Date,
+        default: Date.now()
     }
 });
 
@@ -62,7 +67,16 @@ userSchema.pre<UserInterface>('save', async function(next) {
 
 userSchema.methods.isPasswordCorrect = function(candidatePassword: string, userPassword: string): boolean {
     return bcrypt.compare(candidatePassword, userPassword);
-}
+};
+
+userSchema.methods.hasPasswordBeenChanged = function(JWTTimestamp: number): boolean {
+    if (this.passwordChangedAt) {
+        const convertToTimestamp = +(this.passwordChangedAt.getTime() / 1000).toFixed();
+        // if JWTTimestamp less that means that password has been changed after sent token issued
+        return JWTTimestamp < convertToTimestamp;
+    }
+    return false;
+};
 
 const User = mongoose.model<UserInterface>('User', userSchema);
 
