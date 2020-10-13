@@ -1,4 +1,5 @@
 import {NextFunction, Request, Response} from "express";
+const catchAsyncUser = require('../utils/catchAsync');
 
 exports.getAllUsers = (request: Request, response: Response) => {
     response
@@ -9,7 +10,7 @@ exports.getAllUsers = (request: Request, response: Response) => {
                 users: ['users']
             }
         })
-}
+};
 exports.createUser = (request: Request, response: Response) => {
     response
         .status(201)
@@ -19,7 +20,7 @@ exports.createUser = (request: Request, response: Response) => {
                 user: {newUser: 'newUser'}
             }
         })
-}
+};
 exports.getUser = (request: Request, response: Response) => {
     response
         .status(200)
@@ -29,7 +30,7 @@ exports.getUser = (request: Request, response: Response) => {
                 user: {user: 'user'}
             }
         })
-}
+};
 exports.updateUser = (request: Request, response: Response) => {
     response
         .status(200)
@@ -39,7 +40,7 @@ exports.updateUser = (request: Request, response: Response) => {
                 user: 'user updated'
             }
         })
-}
+};
 exports.deleteUser = (request: Request, response: Response) => {
     response
         .status(204)
@@ -47,4 +48,4 @@ exports.deleteUser = (request: Request, response: Response) => {
             status: 'success',
             data: null
         })
-}
+};
