@@ -13,7 +13,7 @@ routerPaintings.route('/')
 
 routerPaintings.route('/:id')
     .get(paintingsControllers.getPaintingDetails)
-    .patch(paintingsControllers.updatePainting)
-    .delete(paintingsControllers.deletePainting);
+    .patch(protectController.protect, protectController.restrictTo('admin'), paintingsControllers.updatePainting)
+    .delete(protectController.protect, protectController.restrictTo('admin'), paintingsControllers.deletePainting);
 
 module.exports = routerPaintings;

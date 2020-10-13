@@ -23,7 +23,6 @@ app.use(express.static(`${__dirname}/public`));
 //     next()
 // });
 
-
 // api handlers
 app.use('/api/v1/paintings', paintingsRouter);
 app.use('/api/v1/users', usersRouter);

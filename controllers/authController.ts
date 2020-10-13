@@ -6,8 +6,8 @@ const authAppError = require('../utils/appError.ts');
 const UserModelForAuth = require('../models/usersModel.ts');
 
 const signToken = (id: string) => {
-    return jwt.sign({id: id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN})
-}
+    return jwt.sign({id: id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
+};
 
 exports.signup = catchAsyncAuth(async (request: Request, response: Response, next: NextFunction) => {
 
@@ -49,7 +49,7 @@ exports.login = catchAsyncAuth(async (request: Request, response: Response, next
     })
 });
 
-exports.protect = catchAsyncAuth(async (request: Request, response: Response, next: NextFunction) => {
+exports.protect = catchAsyncAuth(async (request: any, response: Response, next: NextFunction) => {
     // check if there is a token
     let token;
     if (request.headers.authorization && request.headers.authorization.startsWith('Bearer')) {
@@ -72,5 +72,15 @@ exports.protect = catchAsyncAuth(async (request: Request, response: Response, ne
     }
 
     // if all checks are passed - grant access to the protected route
+    request.user = checkedUser;
     next();
 });
+
+exports.restrictTo = (role: string) => {
+    return (request: any, response: Response, next: NextFunction) => {
+        if(!request.user.isAdmin) {
+            return next(new authAppError('You have no permission to this action.', 403))
+        }
+        next();
+    }
+};
