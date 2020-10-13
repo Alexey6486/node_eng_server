@@ -30,7 +30,8 @@ const userSchema: Schema = new mongoose.Schema({
     password: {
         type: String,
         required: [true],
-        minlength: [8, 'Min password length is 8 symbols.']
+        minlength: [8, 'Min password length is 8 symbols.'],
+        select: false // hide password
     },
     isAdmin: {
         type: Boolean,
@@ -58,6 +59,10 @@ userSchema.pre<UserInterface>('save', async function(next) {
     this.password = await bcrypt.hash(this.password, 12);
     next();
 });
+
+userSchema.methods.isPasswordCorrect = function(candidatePassword: string, userPassword: string): boolean {
+    return bcrypt.compare(candidatePassword, userPassword);
+}
 
 const User = mongoose.model<UserInterface>('User', userSchema);
 
